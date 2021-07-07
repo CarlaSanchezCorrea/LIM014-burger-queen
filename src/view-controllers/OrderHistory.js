@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react'
-import ChefMenu from './ChefMenu'
-import { db } from '../../collections/firebase-config'
-import customerNotes from './imgChef/customerNotes.svg'
+import MenuBar   from './MenuBar'
+import { db } from '../collections/firebase-config'
+import customerNotes from './Chef/imgChef/customerNotes.svg'
 
 function HistorialContainer() {
     const [menu, setMenu] = useState([])
@@ -14,7 +14,7 @@ function HistorialContainer() {
         querySnapshot.forEach((doc) => {
           output.push({ id: doc.id, ...doc.data() });
         })
-        setMenu(output.filter(e => e.timeEnd !== type));
+        setMenu(output.filter(e => e.status === 'finished'));
       })
     }, [])
     const renderTimeStart = (h, m, s) => {
@@ -63,9 +63,10 @@ function HistorialContainer() {
             return('no hiciste bien el trabajo')
         }
     }
+
     return (
     <div>
-        <ChefMenu/>
+        <MenuBar/>
         <section className="chef-container">
         <section className='data-container'>
             {menu.map((e, index) => (
@@ -92,13 +93,14 @@ function HistorialContainer() {
                       </section>
                       <section className='note-container'>
                         <img src="https://image.flaticon.com/icons/png/512/1497/1497835.png"  className='note-icon' alt='customers-notes'/>
-                        <div className='customer-notes'> Start :<span id="waitername-style-orderChef">{renderTimeStart(e.timeHourStart[0],e.timeHourStart[1],e.timeHourStart[2])}</span></div>
+                        <div className='customer-notes'>  Start : <span id="waitername-style-orderChef">{renderTimeStart(e.timeHourStart[0],e.timeHourStart[1],e.timeHourStart[2])}</span></div>
                         <div className='customer-notes'>Finish : <span id="waitername-style-orderChef">{renderTimeEnd(e.timeEnd[0],e.timeEnd[1],e.timeEnd[2])}</span></div>
                       </section>
                       <section className='note-container'>
                         <img src="https://image.flaticon.com/icons/png/512/1584/1584942.png"className='note-icon' alt='customers-notes'/>
-                        <div className='customer-notes'>Time :<span id="waitername-style-orderChef">{timeCalculate(e.timeHourStart, e.timeEnd)}</span></div>
+                        <div className='customer-notes'>Time : <span id="waitername-style-orderChef">{timeCalculate(e.timeHourStart, e.timeEnd)}</span></div>
                       </section>
+
                   </section>
                 </section>
             ))}
